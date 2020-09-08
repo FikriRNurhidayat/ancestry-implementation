@@ -26,12 +26,12 @@ class Category < ApplicationRecord
   end
 
   def set_master_code
-    @sequence = self.class.where(:ancestry => nil).length + 1
+    @sequence = self.class.select(:id).where(:ancestry => nil).count + 1
     self.code = "CAT-#{sequence_to_string}" 
   end
 
   def set_cluster_code
-    @sequence = self.class.cluster.length + 1
+    @sequence = self.class.select(:id).cluster.count + 1
     self.code = "CLU-#{sequence_to_string}"
   end
 
