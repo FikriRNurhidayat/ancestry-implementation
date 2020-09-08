@@ -2,6 +2,7 @@ class Category < ApplicationRecord
   has_ancestry
 
   before_save :set_code
+  validate :title_uniqueness
   
   def self.cluster
     where("ancestry ~ '^[0-9]+$'")
@@ -20,6 +21,13 @@ class Category < ApplicationRecord
   end
 
   private
+
+  # Since some of you might use the Soft Delete method
+  # on deleting some record, so we need to check manually
+  # if some field already exist or not.
+  def title_uniqueness
+    errors.add(:title, "has been taken") if self.class.where(:title => self.title).exists?
+  end
 
   def sequence_to_string
     sprintf('%04d', @sequence)
